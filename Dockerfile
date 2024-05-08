@@ -4,12 +4,17 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
-RUN npm install 
+RUN npm i -g @angular/cli 
 
-RUN npm run build
+RUN npm install
+
+COPY . .
+
+RUN ng build --prod
 
 FROM nginx:latest
 
-COPY --from=build /usr/src/app/dist/portfolio /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /usr/src/app/dist/* /usr/share/nginx/html
 
 EXPOSE 80
